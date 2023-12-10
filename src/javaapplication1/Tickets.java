@@ -142,7 +142,7 @@ public class Tickets extends JFrame implements ActionListener {
 		else if (e.getSource() == mnuItemViewTicket) {
 
 			try {
-				username = JOptionPane.showInputDialog(null, "Enter yout username:");
+				username = JOptionPane.showInputDialog(null, "Enter your username:");
 				String ticketId = JOptionPane.showInputDialog(null, "Enter a ticket ID number:");
 				JTable table = new JTable(ticketsJTable.buildTableModel(dao.ticketLookup(ifAdmin, username, Integer.parseInt(ticketId))));
 				table.setBounds(30, 40, 200, 400);
@@ -158,7 +158,7 @@ public class Tickets extends JFrame implements ActionListener {
 		//UPDATE TICKET updateRecords( boolean adm, String username, int ticketId, String ticketDesc, String status)
 		else if (e.getSource() == mnuItemUpdate) {
 			try {
-				username = JOptionPane.showInputDialog(null, "Enter yout username:");
+				username = JOptionPane.showInputDialog(null, "Enter your username:");
 				String ticketId = JOptionPane.showInputDialog(null, "Enter ticket ID:");
 				String ticketDesc = JOptionPane.showInputDialog(null, "Enter ticket description:");
 				String status = JOptionPane.showInputDialog(null, "Enter ticket status:");
@@ -176,7 +176,7 @@ public class Tickets extends JFrame implements ActionListener {
 			try {
 				boolean confirm = false;
 				while(!confirm) {
-					username = JOptionPane.showInputDialog(null, "Enter yout username:");
+					username = JOptionPane.showInputDialog(null, "Enter your username:");
 					String ticketId = JOptionPane.showInputDialog(null, "Enter ticket ID:");
 					
 					//Display record that's being deleted
