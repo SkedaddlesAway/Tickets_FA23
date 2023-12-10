@@ -26,7 +26,7 @@ public class Login extends JFrame {
 
 		super("IIT HELP DESK LOGIN");
 		conn = new Dao();
-		conn.addUsers();
+		//tables and users have been added already
 		setSize(400, 210);
 		setLayout(new GridLayout(4, 2));
 		setLocationRelativeTo(null); // centers window

@@ -117,13 +117,11 @@ public class Dao {
 	public int insertRecords(String username, String ticketDesc) {
 		int id = 0;
 		try {
-			SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
-			Date date = new Date();
-			String time = formatter.format(date);
+			SimpleDateFormat spdf = new SimpleDateFormat("yyyy-mm-dd");
+			String time = spdf.format(new Date());
 			statement = getConnection().createStatement();
-			statement.executeUpdate("Insert into g_bart_tickets1(ticket_issuer, ticket_description, status, start_date) values(" + " '"
-					+ username + "','" + ticketDesc + "', '"+"Pending"+"', '"+ time +"')", 
-					Statement.RETURN_GENERATED_KEYS);
+			statement.execute("Insert into g_bart_tickets1"+"(ticket_issuer, ticket_description, status, start_date)"+
+			" values('" + username + "', '" + ticketDesc + "', 'pending', '"+ time +"')", Statement.RETURN_GENERATED_KEYS);
 			// set auto status as pending
 			// retrieve ticket id number newly auto generated upon record insertion
 			ResultSet resultSet = null;
@@ -141,7 +139,7 @@ public class Dao {
 
 	}
 	
-	// Always check if admin is accessing or not
+	//  check if admin is accessing or not
 	public ResultSet readRecords(String username, boolean adm) {
 		ResultSet results = null;
 		try {
@@ -183,9 +181,8 @@ public class Dao {
 	// only let admin update tickets
 	// set up error messages for normal users
 	public void updateRecords( boolean adm, String username, int ticketId, String ticketDesc, String status) {
-		SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
-		Date date = new Date();
-		String time = format.format(date);
+		SimpleDateFormat spdf = new SimpleDateFormat("MM-dd-yyyy");
+		String time = spdf.format(new Date());
 		try {
 			statement = getConnection().createStatement();
 			int update;
