@@ -185,12 +185,12 @@ public class Dao {
 			int update;
 			//check if ticket is closed or not
 			if (adm) {
-				update = statement.executeUpdate("update g_bart_tickets1 set ticket_description = '"+ticketDesc+"', status = '"+status+" where ticket_id = "+ticketId);
+				update = statement.executeUpdate("update g_bart_tickets1 set ticket_description = '"+ticketDesc+"', status = '"+status+"' where ticket_id = "+ticketId);
 				if(status.equalsIgnoreCase("closed")) 
 					closeRecord(ticketId);
 			}
 			else {
-				update = statement.executeUpdate("update g_bart_tickets1 set ticket_description = '"+ticketDesc+"'" + " where ticket_issuer = '"+username+"'" + " and ticket_id = "+ticketId);
+				update = statement.executeUpdate("update g_bart_tickets1 set ticket_description = '"+ticketDesc+"' where ticket_issuer = '"+username+"'" + " and ticket_id = "+ticketId);
 				if(status.equalsIgnoreCase("closed")) 
 					closeRecord(ticketId);
 			}

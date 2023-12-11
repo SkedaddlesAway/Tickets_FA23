@@ -40,6 +40,7 @@ public class Tickets extends JFrame implements ActionListener {
 	JMenuItem mnuItemOpenTicket;
 	JMenuItem mnuItemViewTicket;
 	JMenuItem mnuItemRefresh;
+	JMenuItem mnuItemCloseTicket;
 
 	public Tickets(Boolean isAdmin) {
 		ifAdmin = isAdmin;
@@ -79,6 +80,9 @@ public class Tickets extends JFrame implements ActionListener {
 		mnuItemOpenTicket = new JMenuItem("Open Ticket");
 		// add to Ticket Main menu item
 		mnuTickets.add(mnuItemOpenTicket);
+		mnuItemCloseTicket = new JMenuItem("Close Ticket");
+		// add to Ticket Main menu item
+		mnuTickets.add(mnuItemCloseTicket);
 
 		// initialize second sub menu item for Tickets main menu
 		mnuItemViewTicket = new JMenuItem("View Ticket");
@@ -154,8 +158,35 @@ public class Tickets extends JFrame implements ActionListener {
 			else
 				System.out.println("Ticket cannot be created!!!");
 		}
+		else if (e.getSource() == mnuItemCloseTicket) { //code swiped from delete action
+			try {
+				boolean confirm = false;
+				while(!confirm) {
+					username = JOptionPane.showInputDialog(null, "Enter your username:");
+					String ticketId = JOptionPane.showInputDialog(null, "Enter ticket ID:");
+					
+					//Display record that's being deleted
+					JTable table = new JTable(ticketsJTable.buildTableModel(dao.ticketLookup(ifAdmin, username, Integer.parseInt(ticketId))));
+					table.setBounds(30, 40, 200, 400);
+					JScrollPane sp = new JScrollPane(table);
+					add(sp);
+					setVisible(true); 
+					
+					//Make sure that's the record they want to delete
+					String askForConfirm = JOptionPane.showInputDialog(null, "Close the displayed ticket? <y/n>");
+					if(askForConfirm.equalsIgnoreCase("y")) {
+						confirm = true;
+						dao.deleteRecords(Integer.parseInt(ticketId));
+					}
+					else
+						JOptionPane.showMessageDialog(null, "Restarting operation...");
+				}
+			}
+			catch(Exception se) {
+				se.printStackTrace();
+			}
+		}
 		else if (e.getSource() == mnuItemViewTicket) {
-
 			try {
 				username = JOptionPane.showInputDialog(null, "Enter your username:");
 				String ticketId = JOptionPane.showInputDialog(null, "Enter a ticket ID number:");
@@ -169,7 +200,6 @@ public class Tickets extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		}
-		
 		//UPDATE TICKET updateRecords( boolean adm, String username, int ticketId, String ticketDesc, String status)
 		else if (e.getSource() == mnuItemUpdate) {
 			try {
