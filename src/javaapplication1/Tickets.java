@@ -25,6 +25,8 @@ public class Tickets extends JFrame implements ActionListener {
 	Dao dao = new Dao(); // for CRUD operations
 	String username; //seems handy
 	Boolean ifAdmin = null; //permission setter
+	JTable table = new JTable();
+
 
 	// Main menu object items
 	private JMenu mnuFile = new JMenu("File");
@@ -37,6 +39,7 @@ public class Tickets extends JFrame implements ActionListener {
 	JMenuItem mnuItemDelete;
 	JMenuItem mnuItemOpenTicket;
 	JMenuItem mnuItemViewTicket;
+	JMenuItem mnuItemRefresh;
 
 	public Tickets(Boolean isAdmin) {
 		ifAdmin = isAdmin;
@@ -47,7 +50,6 @@ public class Tickets extends JFrame implements ActionListener {
 	/*THINGS TO WORK ON AFTER BREAK
 	 * - NORMAL VS ADMIN USER RIGHTS 
 	 * - GUI DESIGN
-	 * - zoom out 3
 	 * */
 
 	private void createMenu() {
@@ -56,6 +58,11 @@ public class Tickets extends JFrame implements ActionListener {
 		mnuItemExit = new JMenuItem("Exit");
 		// add to File main menu item
 		mnuFile.add(mnuItemExit);
+		
+		//adding refresh button
+		mnuItemRefresh = new JMenuItem("Refresh");
+		// add to File main menu item
+		mnuFile.add(mnuItemRefresh);
 
 		if(ifAdmin) {// only add this menu + listening events if an admin logs in
 			mnuItemUpdate = new JMenuItem("Update Ticket");
@@ -108,7 +115,7 @@ public class Tickets extends JFrame implements ActionListener {
 		setVisible(true); //display table 
 		
 		try {
-			JTable table = new JTable(ticketsJTable.buildTableModel(dao.readRecords(username, ifAdmin)));
+			table = new JTable(ticketsJTable.buildTableModel(dao.readRecords(username, ifAdmin)));
 			table.setBounds(30, 40, 400, 400);
 			JScrollPane sp = new JScrollPane(table);
 			add(sp);
@@ -125,6 +132,10 @@ public class Tickets extends JFrame implements ActionListener {
 		if (e.getSource() == mnuItemExit) {
 			System.exit(0);
 		} 
+		//		else if (e.getSource() == mnuItemRefresh) {
+		//			createMenu();
+		//			prepareGUI();
+		//		} scrapped for future tinkering
 		else if (e.getSource() == mnuItemOpenTicket) {
 
 			// get ticket information
@@ -136,7 +147,7 @@ public class Tickets extends JFrame implements ActionListener {
 			int id = dao.insertRecords(username, ticketDesc);
 
 			// display results if successful or not to console / dialog box
-			if (id != 0) {
+			if (id != 0 && !username.equals("")) {
 				System.out.println("Ticket #" + id + " created successfully!!!");
 				JOptionPane.showMessageDialog(null, "Ticket #" + id + " created");
 			} 
