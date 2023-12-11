@@ -26,7 +26,7 @@ public class Login extends JFrame {
 
 		super("IIT HELP DESK LOGIN");
 		conn = new Dao();
-		//tables and users have been added already
+		//conn.addUsers(); taken out due to tables made and users added already
 		setSize(400, 210);
 		setLayout(new GridLayout(4, 2));
 		setLocationRelativeTo(null); // centers window
@@ -89,6 +89,6 @@ public class Login extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new Login();
+		new Login(); //EZ
 	}
 }

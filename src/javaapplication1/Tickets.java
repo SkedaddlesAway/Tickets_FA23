@@ -43,24 +43,30 @@ public class Tickets extends JFrame implements ActionListener {
 		createMenu();
 		prepareGUI();
 	}
+	
+	/*THINGS TO WORK ON AFTER BREAK
+	 * - NORMAL VS ADMIN USER RIGHTS 
+	 * - GUI DESIGN
+	 * - zoom out 3
+	 * */
 
 	private void createMenu() {
-
 		/* Initialize sub menu items **************************************/
 		// initialize sub menu item for File main menu
 		mnuItemExit = new JMenuItem("Exit");
 		// add to File main menu item
 		mnuFile.add(mnuItemExit);
 
-		// initialize first sub menu items for Admin main menu
-		mnuItemUpdate = new JMenuItem("Update Ticket");
-		// add to Admin main menu item
-		mnuAdmin.add(mnuItemUpdate);
+		if(ifAdmin) {// only add this menu + listening events if an admin logs in
+			mnuItemUpdate = new JMenuItem("Update Ticket");
+			mnuAdmin.add(mnuItemUpdate);
 
-		// initialize second sub menu items for Admin main menu
-		mnuItemDelete = new JMenuItem("Delete Ticket");
-		// add to Admin main menu item
-		mnuAdmin.add(mnuItemDelete);
+			mnuItemDelete = new JMenuItem("Delete Ticket");
+			mnuAdmin.add(mnuItemDelete);
+
+			mnuItemUpdate.addActionListener(this);
+			mnuItemDelete.addActionListener(this);
+		}
 
 		// initialize first sub menu item for Tickets main menu
 		mnuItemOpenTicket = new JMenuItem("Open Ticket");
@@ -74,8 +80,6 @@ public class Tickets extends JFrame implements ActionListener {
 
 		/* Add action listeners for each desired menu item *************/
 		mnuItemExit.addActionListener(this);
-		mnuItemUpdate.addActionListener(this);
-		mnuItemDelete.addActionListener(this);
 		mnuItemOpenTicket.addActionListener(this);
 		mnuItemViewTicket.addActionListener(this);
 
