@@ -214,7 +214,7 @@ public class Dao {
 			int update;
 			
 			//try to close the ticket
-			update = statement.executeUpdate("update g_bart_tickets1 set end_time = '"+time+"' where ticket_id = "+ticketId);
+			update = statement.executeUpdate("update g_bart_tickets1 set end_date = '"+time+"', status = 'closed' where ticket_id = "+ticketId);
 			
 			//verify that ticket closed
 			if (update !=0) 

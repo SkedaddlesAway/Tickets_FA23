@@ -42,8 +42,9 @@ public class Tickets extends JFrame implements ActionListener {
 	JMenuItem mnuItemRefresh;
 	JMenuItem mnuItemCloseTicket;
 
-	public Tickets(Boolean isAdmin) {
+	public Tickets(Boolean isAdmin, String uname) {
 		ifAdmin = isAdmin;
+		username = uname;
 		createMenu();
 		prepareGUI();
 	}
@@ -93,6 +94,8 @@ public class Tickets extends JFrame implements ActionListener {
 		mnuItemExit.addActionListener(this);
 		mnuItemOpenTicket.addActionListener(this);
 		mnuItemViewTicket.addActionListener(this);
+		mnuItemRefresh.addActionListener(this);//IT WAS YOU THAT I FORGOT TO DO AUUGHGHUHGUH
+		mnuItemCloseTicket.addActionListener(this); 
 
 	}
 	private void prepareGUI() {
@@ -129,6 +132,11 @@ public class Tickets extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 	}
+	private void refresh() {
+		new Tickets(ifAdmin, username); //open Tickets file / GUI interface
+		setVisible(false); // HIDE THE FRAME
+		dispose(); // CLOSE OUT THE WINDOW
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -136,10 +144,9 @@ public class Tickets extends JFrame implements ActionListener {
 		if (e.getSource() == mnuItemExit) {
 			System.exit(0);
 		} 
-		//		else if (e.getSource() == mnuItemRefresh) {
-		//			createMenu();
-		//			prepareGUI();
-		//		} scrapped for future tinkering
+		else if (e.getSource() == mnuItemRefresh) {
+			refresh();
+		} 
 		else if (e.getSource() == mnuItemOpenTicket) {
 
 			// get ticket information
@@ -162,7 +169,6 @@ public class Tickets extends JFrame implements ActionListener {
 			try {
 				boolean confirm = false;
 				while(!confirm) {
-					username = JOptionPane.showInputDialog(null, "Enter your username:");
 					String ticketId = JOptionPane.showInputDialog(null, "Enter ticket ID:");
 					
 					//Display record that's being deleted
@@ -176,7 +182,8 @@ public class Tickets extends JFrame implements ActionListener {
 					String askForConfirm = JOptionPane.showInputDialog(null, "Close the displayed ticket? <y/n>");
 					if(askForConfirm.equalsIgnoreCase("y")) {
 						confirm = true;
-						dao.deleteRecords(Integer.parseInt(ticketId));
+						dao.closeRecord(Integer.parseInt(ticketId));
+						JOptionPane.showMessageDialog(null, "Ticket "+ ticketId + " has been closed!");
 					}
 					else
 						JOptionPane.showMessageDialog(null, "Restarting operation...");
@@ -188,7 +195,7 @@ public class Tickets extends JFrame implements ActionListener {
 		}
 		else if (e.getSource() == mnuItemViewTicket) {
 			try {
-				username = JOptionPane.showInputDialog(null, "Enter your username:");
+				 
 				String ticketId = JOptionPane.showInputDialog(null, "Enter a ticket ID number:");
 				JTable table = new JTable(ticketsJTable.buildTableModel(dao.ticketLookup(ifAdmin, username, Integer.parseInt(ticketId))));
 				table.setBounds(30, 40, 200, 400);
@@ -203,7 +210,7 @@ public class Tickets extends JFrame implements ActionListener {
 		//UPDATE TICKET updateRecords( boolean adm, String username, int ticketId, String ticketDesc, String status)
 		else if (e.getSource() == mnuItemUpdate) {
 			try {
-				username = JOptionPane.showInputDialog(null, "Enter your username:");
+				 
 				String ticketId = JOptionPane.showInputDialog(null, "Enter ticket ID:");
 				String ticketDesc = JOptionPane.showInputDialog(null, "Enter ticket description:");
 				String status = JOptionPane.showInputDialog(null, "Enter ticket status:");
@@ -221,7 +228,7 @@ public class Tickets extends JFrame implements ActionListener {
 			try {
 				boolean confirm = false;
 				while(!confirm) {
-					username = JOptionPane.showInputDialog(null, "Enter your username:");
+					 
 					String ticketId = JOptionPane.showInputDialog(null, "Enter ticket ID:");
 					
 					//Display record that's being deleted
@@ -236,6 +243,7 @@ public class Tickets extends JFrame implements ActionListener {
 					if(askForConfirm.equalsIgnoreCase("y")) {
 						confirm = true;
 						dao.deleteRecords(Integer.parseInt(ticketId));
+						JOptionPane.showMessageDialog(null, "Ticket "+ ticketId + " has been deleted!");
 					}
 					else
 						JOptionPane.showMessageDialog(null, "Restarting operation...");
@@ -245,6 +253,7 @@ public class Tickets extends JFrame implements ActionListener {
 				se.printStackTrace();
 			}
 		}
+		refresh();
 
 	}
 
