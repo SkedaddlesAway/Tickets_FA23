@@ -44,8 +44,8 @@ public class Dao {
 				"ticket_issuer VARCHAR(30), "+
 				"ticket_description VARCHAR(200), "+
 				"status VARCHAR(10), "+ //pending, open, closed?
-				"start_date DATE, "+
-				"end_date DATE)"; 
+				"start_date DATETIME, "+
+				"end_date DATETIME)"; 
 		final String createUsersTable = 
 				"CREATE TABLE g_bart_users1(uid INT AUTO_INCREMENT PRIMARY KEY, " +
 				"uname VARCHAR(30), " +
@@ -117,11 +117,10 @@ public class Dao {
 	public int insertRecords(String username, String ticketDesc) {
 		int id = 0;
 		try {
-			SimpleDateFormat spdf = new SimpleDateFormat("yyyy-mm-dd");
+			SimpleDateFormat spdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String time = spdf.format(new Date());
 			statement = getConnection().createStatement();
-			statement.execute("Insert into g_bart_tickets1"+"(ticket_issuer, ticket_description, status, start_date)"+
-			" values('" + username + "', '" + ticketDesc + "', 'pending', '"+ time +"')", Statement.RETURN_GENERATED_KEYS);
+			statement.execute("Insert into g_bart_tickets1(ticket_issuer, ticket_description, status, start_date) values('" + username + "', '" + ticketDesc + "', 'pending', '"+ time +"')", Statement.RETURN_GENERATED_KEYS);
 			// set auto status as pending
 			// retrieve ticket id number newly auto generated upon record insertion
 			ResultSet resultSet = null;
@@ -181,8 +180,6 @@ public class Dao {
 	// only let admin update tickets
 	// set up error messages for normal users
 	public void updateRecords( boolean adm, String username, int ticketId, String ticketDesc, String status) {
-		SimpleDateFormat spdf = new SimpleDateFormat("MM-dd-yyyy");
-		String time = spdf.format(new Date());
 		try {
 			statement = getConnection().createStatement();
 			int update;
@@ -190,12 +187,12 @@ public class Dao {
 			if (adm) {
 				update = statement.executeUpdate("update g_bart_tickets1 set ticket_description = '"+ticketDesc+"', status = '"+status+" where ticket_id = "+ticketId);
 				if(status.equalsIgnoreCase("closed")) 
-					statement.executeUpdate("update g_bart_tickets1 set end_time = '"+time+"' where ticket_id = "+ticketId);
+					closeRecord(ticketId);
 			}
 			else {
 				update = statement.executeUpdate("update g_bart_tickets1 set ticket_description = '"+ticketDesc+"'" + " where ticket_issuer = '"+username+"'" + " and ticket_id = "+ticketId);
 				if(status.equalsIgnoreCase("closed")) 
-					statement.executeUpdate("update g_bart_tickets1 set end_time = '"+time+"' where ticket_id = "+ticketId);
+					closeRecord(ticketId);
 			}
 			
 			//check that update happened because ticket was real and user was verified
@@ -203,6 +200,27 @@ public class Dao {
 				System.out.println("Ticket #"+ ticketId + " has been updated!");
 			else 
 				System.out.println("Could not find ticket #"+ ticketId);
+			//connect.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void closeRecord( int ticketId) {
+		SimpleDateFormat spdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String time = spdf.format(new Date());
+		try {
+			statement = getConnection().createStatement();
+			int update;
+			
+			//try to close the ticket
+			update = statement.executeUpdate("update g_bart_tickets1 set end_time = '"+time+"' where ticket_id = "+ticketId);
+			
+			//verify that ticket closed
+			if (update !=0) 
+				System.out.println("Ticket #"+ ticketId + " has been closed!");
+			else 
+				System.out.println("Could not close ticket #"+ ticketId);
 			//connect.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
